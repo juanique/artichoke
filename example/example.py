@@ -1,4 +1,4 @@
-from config import Config
+from artichoke import Config
 from djangoconfig import DjangoConfigDefaultManager
 
 config = Config(default_manager=DjangoConfigDefaultManager())
