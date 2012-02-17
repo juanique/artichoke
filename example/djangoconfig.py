@@ -1,5 +1,5 @@
-from config import DefaultManager
-from config.helpers import read
+from artichoke import DefaultManager
+from artichoke.helpers import read
 
 class DjangoConfigDefaultManager(DefaultManager):
 
