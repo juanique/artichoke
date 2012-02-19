@@ -1,3 +1,18 @@
+def prompt(msg, default=None):
+
+    if default is None:
+        msg = "%s [yes, no]: " % msg
+    else:
+        msg = "%s [yes, no] (%s): " % (msg, default)
+
+    user_input = raw_input(msg)
+    if user_input:
+        if user_input[0].upper() == 'Y':
+            return True
+        if user_input[0].upper() == 'N':
+            return False
+    return read(msg, default=default)
+
 def read(msg, default=None, options=None):
     if options is not None:
         msg = "%s [%s]" % (msg, ', '.join(options))

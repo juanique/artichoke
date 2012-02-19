@@ -1,5 +1,6 @@
 from ConfigParser import ConfigParser, DuplicateSectionError
 from errors import InvalidConfig
+import re
 
 
 class ConfigVariable(object):
@@ -95,13 +96,15 @@ class ConfigSection(object):
 
     def __getattr__(self, name):
         try:
-            return self._variables[name].value
+            value = self._variables[name].value
         except KeyError:
             value = self._config._default_manager.get_default(section=self._name,
                 variable=name)
             self.set_var(name, value)
 
             return self.__getattr__(name)
+
+        return self._parse_value(value)
 
     def __setattr__(self, name, value):
         if not isinstance(value, self._config._variable_classs):
@@ -119,3 +122,22 @@ class ConfigSection(object):
     def get_var(self, key):
         return self._variables[key]
 
+    def _parse_value(self, value):
+        if value is None:
+            return None
+
+        try:
+            if re.search("^yes$|^true$", value, re.IGNORECASE):
+                return True
+            if re.search("^no$|^false$", value, re.IGNORECASE):
+                return False
+
+            try:
+                return int(value)
+            except ValueError:
+                return float(value)
+
+        except Exception:
+            return value
+
+        return value

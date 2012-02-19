@@ -49,6 +49,23 @@ class ConfigUnitTestLoadIni(unittest.TestCase):
 
         self.assertEqual(self.config.db_name, "mysql")
 
+    def test_boolean_inference(self):
+        "It inferes yes/no and true/false strings as boolean values."
+
+        self.assertEqual(True, self.config.SectionA.boolean_true)
+        self.assertEqual(True, self.config.SectionA.boolean_true2)
+        self.assertEqual(True, self.config.SectionA.boolean_true3)
+        self.assertEqual(False, self.config.SectionA.boolean_false)
+        self.assertEqual(False, self.config.SectionA.boolean_false2)
+        self.assertEqual(False, self.config.SectionA.boolean_false3)
+
+    def test_number_inference(self):
+        "It automatically casts integers and floats to their respective types"
+
+        self.assertEqual(42, self.config.SectionA.fourty_two)
+        self.assertEqual(42.0, self.config.SectionA.fourty_two_zero)
+
+
 
 class ConfigUnitTestCollisions(unittest.TestCase):
 
