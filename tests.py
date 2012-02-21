@@ -184,6 +184,16 @@ class ConfigUnitTestBugs(unittest.TestCase):
 
         self.assertEqual("new_value", saved_config.SectionA.new_var)
 
+    def test_add_section_resets_vars(self):
+        """Reproduce BUG: calling add_section() overwrittes existing
+        sections with an empty one.
+
+        """
+        config = Config("fixtures/config1.ini")
+        config.add_section("SectionA")
+
+        self.assertEqual(2, config.SectionA.value_a)
+
 if __name__ == '__main__':
     unittest.main()
 

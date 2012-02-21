@@ -39,7 +39,8 @@ class Config(object):
 
     def add_section(self, section_name):
         self._validate_section_name(section_name)
-        self._sections[section_name] = ConfigSection(name=section_name, config=self)
+        if section_name not in self._sections:
+            self._sections[section_name] = ConfigSection(name=section_name, config=self)
         try:
             self._parser.add_section(section_name)
         except DuplicateSectionError:
