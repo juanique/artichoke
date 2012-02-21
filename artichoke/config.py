@@ -108,9 +108,12 @@ class ConfigSection(object):
 
     def __setattr__(self, name, value):
         if not isinstance(value, self._config._variable_classs):
-            value = self._config._variable_classs(value=value)
+            value_var = self._config._variable_classs(value=value)
+        else:
+            value_var = value
 
-        self._variables[name] = value
+        self._variables[name] = value_var
+        self._config._parser.set(self._name, name, value_var.value)
 
     def __contains__(self, name):
         return self._variables.__contains__(name)

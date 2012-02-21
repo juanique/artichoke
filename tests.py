@@ -124,6 +124,7 @@ class ConfigUnitTestCreatingConfig(unittest.TestCase):
 
         os.remove("generated_config.ini")
 
+
 class ConfigUnitTestMetaData(unittest.TestCase):
 
     class CustomVariable(ConfigVariable):
@@ -169,6 +170,19 @@ class ConfigUnitTestMetaData(unittest.TestCase):
         config = Config("fixtures/config1.ini", default_manager=self.FieldDefaultManager())
         self.assertEquals(config.SectionA.valueb, "b")
 
+
+class ConfigUnitTestBugs(unittest.TestCase):
+    def test_setted_value_saved(self):
+        "Reproduce BUG: manually asigned values ares not saved to ini file."
+
+        config = Config("fixtures/config1.ini")
+        config.SectionA.new_var = "new_value"
+
+        filename = "generated_config.ini"
+        config.save(filename)
+        saved_config = Config(filename)
+
+        self.assertEqual("new_value", saved_config.SectionA.new_var)
 
 if __name__ == '__main__':
     unittest.main()
