@@ -1,3 +1,5 @@
+Wrapper for Python ConfigParser.
+
 ## Installation
 
     git clone https://github.com/juanique/artichoke
