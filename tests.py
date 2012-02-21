@@ -65,6 +65,11 @@ class ConfigUnitTestLoadIni(unittest.TestCase):
         self.assertEqual(42, self.config.SectionA.fourty_two)
         self.assertEqual(42.0, self.config.SectionA.fourty_two_zero)
 
+    def test_is_self(self):
+        "It tells whether a variable is set or not"
+
+        self.assertEqual(True, self.config.is_set("db_name"))
+        self.assertEqual(False, self.config.is_set("pony"))
 
 
 class ConfigUnitTestCollisions(unittest.TestCase):

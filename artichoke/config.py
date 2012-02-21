@@ -126,6 +126,9 @@ class ConfigSection(object):
     def get_var(self, key):
         return self._variables[key]
 
+    def is_set(self, key):
+        return key in self._variables
+
     def _parse_value(self, value):
         if value is None:
             return None
