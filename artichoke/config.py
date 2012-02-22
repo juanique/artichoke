@@ -37,6 +37,8 @@ class Config(object):
         if config_file is not None:
             self._load_config()
 
+        super.__setattr__(self, 'modified', False)
+
     def add_section(self, section_name):
         self._validate_section_name(section_name)
         if section_name not in self._sections:
@@ -85,7 +87,10 @@ class Config(object):
             return getattr(self._sections['Global'], name)
 
     def __setattr__(self, name, value):
-        setattr(self._sections['Global'], name, value)
+        if hasattr(self, name):
+            super.__setattr__(self, name, value)
+        else:
+            setattr(self._sections['Global'], name, value)
 
 
 class ConfigSection(object):
@@ -114,14 +119,18 @@ class ConfigSection(object):
             value_var = value
 
         self._variables[name] = value_var
+
         self._config._parser.set(self._name, name, value_var.value)
+        self._config.modified = True
 
     def __contains__(self, name):
         return self._variables.__contains__(name)
 
     def set_var(self, key, value):
         self._variables.setdefault(key, self._config._variable_classs()).value = value
+
         self._config._parser.set(self._name, key, value)
+        self._config.modified = True
 
     def get_var(self, key):
         return self._variables[key]

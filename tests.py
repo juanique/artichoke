@@ -116,7 +116,6 @@ class ConfigUnitTestCreatingConfig(unittest.TestCase):
         self.assertTrue(isinstance(self.config.SectionA.get_var('new_var'), ConfigVariable))
         self.assertEquals(5, self.config.SectionA.get_var("new_var"). value)
 
-
     def test_save_config(self):
         "It saves its current state to a .ini file"
 
@@ -128,6 +127,27 @@ class ConfigUnitTestCreatingConfig(unittest.TestCase):
         self.assertEquals(self.config.SectionA.value_a, saved_config.SectionA.value_a)
 
         os.remove("generated_config.ini")
+
+    def test_modified_init(self):
+        """It detects whether any changes where made since the
+        object was constructed, should be False right after __init__"""
+
+        self.assertEquals(False, self.config.modified)
+
+    def test_modified_after_change(self):
+        "modified should be True after changing the value of a variable"
+
+        self.config.new_var = "new_value"
+        self.assertEquals(True, self.config.modified)
+
+    def test_modified_same_vaule(self):
+        """Setting a variable to the same value it had should not be considered
+        a modification"""
+
+        self.config.db_name = "mysql"
+        self.assertEquals(False, self.config.modified)
+
+
 
 
 class ConfigUnitTestMetaData(unittest.TestCase):
