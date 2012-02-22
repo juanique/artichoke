@@ -87,7 +87,7 @@ class Config(object):
             return getattr(self._sections['Global'], name)
 
     def __setattr__(self, name, value):
-        if hasattr(self, name):
+        if name == "modified":
             super.__setattr__(self, name, value)
         else:
             setattr(self._sections['Global'], name, value)
@@ -118,6 +118,12 @@ class ConfigSection(object):
         else:
             value_var = value
 
+        try:
+            if self._variables[name].value == value_var.value:
+                return
+        except Exception:
+            pass
+
         self._variables[name] = value_var
 
         self._config._parser.set(self._name, name, value_var.value)
@@ -127,10 +133,7 @@ class ConfigSection(object):
         return self._variables.__contains__(name)
 
     def set_var(self, key, value):
-        self._variables.setdefault(key, self._config._variable_classs()).value = value
-
-        self._config._parser.set(self._name, key, value)
-        self._config.modified = True
+        self.__setattr__(key, value)
 
     def get_var(self, key):
         return self._variables[key]

@@ -219,6 +219,14 @@ class ConfigUnitTestBugs(unittest.TestCase):
 
         self.assertEqual(2, config.SectionA.value_a)
 
+    def test_modified_set_as_global_var(self):
+        config = Config("fixtures/config1.ini")
+        config.var = "value"
+
+        self.assertFalse(config.is_set("modified"))
+
+
+
 if __name__ == '__main__':
     unittest.main()
 
