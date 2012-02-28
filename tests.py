@@ -13,14 +13,20 @@ class ConfigUnitTestBasic(unittest.TestCase):
         "It can be initialized using a config file."
 
         config_file = "fixtures/config1.ini"
-        config = Config(config_file)
-        self.assertEqual(config_file, config._config_file)
+        Config(config_file)
 
     def test_init_default(self):
         "It can be initialized without a config file."
 
         config = Config()
         self.assertEqual(None, config._config_file)
+
+    def test_load_afer(self):
+       "ini files can be loaded after initialization"
+
+       config = Config()
+       config.load_ini("fixtures/config1.ini")
+       self.assertEqual(config.db_name, "mysql")
 
 
 class ConfigUnitTestLoadIni(unittest.TestCase):

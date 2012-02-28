@@ -25,7 +25,6 @@ class Config(object):
     def __init__(self, config_file=None, variable_class=ConfigVariable,
         default_manager=DefaultManager()):
 
-        super.__setattr__(self, '_config_file', config_file)
         super.__setattr__(self, '_parser', ConfigParser())
         super.__setattr__(self, '_variable_classs', variable_class)
         super.__setattr__(self, '_default_manager', default_manager)
@@ -35,7 +34,7 @@ class Config(object):
         self.add_section("Global")
 
         if config_file is not None:
-            self._load_config()
+            self.load_ini(config_file)
 
         super.__setattr__(self, 'modified', False)
 
@@ -52,8 +51,8 @@ class Config(object):
         with open(output_filename, 'w') as f:
             self._parser.write(f)
 
-    def _load_config(self):
-        self._parser.read(self._config_file)
+    def load_ini(self, ini_file):
+        self._parser.read(ini_file)
 
         for section_name in self._parser.sections():
             self.add_section(section_name)
