@@ -36,7 +36,7 @@ class Config(object):
         if config_file is not None:
             self.load_ini(config_file)
 
-        super.__setattr__(self, 'modified', False)
+        self.modified = False
 
     def add_section(self, section_name):
         self._validate_section_name(section_name)
