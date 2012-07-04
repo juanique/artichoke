@@ -100,6 +100,7 @@ class ConfigSection(object):
         super.__setattr__(self, '_config', config)
 
     def __getattr__(self, name):
+        name = name.lower()
         try:
             value = self._variables[name].value
         except KeyError:
@@ -112,6 +113,7 @@ class ConfigSection(object):
         return self._parse_value(value)
 
     def __setattr__(self, name, value):
+        name = name.lower()
         if not isinstance(value, self._config._variable_classs):
             value_var = self._config._variable_classs(value=value)
         else:
@@ -129,16 +131,16 @@ class ConfigSection(object):
         self._config.modified = True
 
     def __contains__(self, name):
-        return self._variables.__contains__(name)
+        return self._variables.__contains__(name.lower())
 
     def set_var(self, key, value):
         self.__setattr__(key, value)
 
     def get_var(self, key):
-        return self._variables[key]
+        return self._variables[key.lower()]
 
     def is_set(self, key):
-        return key in self._variables
+        return key.lower() in self._variables
 
     def _parse_value(self, value):
         if value is None:

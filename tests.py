@@ -21,7 +21,7 @@ class ConfigUnitTestBasic(unittest.TestCase):
         config = Config()
         self.assertEqual(None, config._config_file)
 
-    def test_load_afer(self):
+    def test_load_after(self):
        "ini files can be loaded after initialization"
 
        config = Config()
@@ -44,11 +44,16 @@ class ConfigUnitTestLoadIni(unittest.TestCase):
 
         ini_value = self.config._parser.get("Global", "db_name")
         self.assertEqual("mysql", ini_value)
-
+    
     def test_get_value(self):
         "It loads the values of the config file as properties."
 
         self.assertEqual("mysql", self.config.Global.db_name)
+        
+    def test_get_value_ci(self):
+        "Values are available through case insensitive names"
+        
+        self.assertEqual("mysql", self.config.Global.DB_NAME)
 
     def test_get_global(self):
         "It loads the [Global] variables into the object namespace."
@@ -120,7 +125,14 @@ class ConfigUnitTestCreatingConfig(unittest.TestCase):
 
         self.config.SectionA.new_var = 5
         self.assertTrue(isinstance(self.config.SectionA.get_var('new_var'), ConfigVariable))
-        self.assertEquals(5, self.config.SectionA.get_var("new_var"). value)
+        self.assertEquals(5, self.config.SectionA.get_var("new_var").value)
+
+    def test_set_variable_ci(self):
+        "Variables can be set through a case insensitive name, and then properly retrieved"
+
+        self.config.SectionA.NEW_VAR = 5
+        self.assertEquals(5, self.config.SectionA.get_var("new_var").value)
+        self.assertEquals(5, self.config.SectionA.get_var("NEW_VAR").value)
 
     def test_save_config(self):
         "It saves its current state to a .ini file"
