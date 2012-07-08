@@ -157,6 +157,11 @@ class ConfigUnitTestCreatingConfig(unittest.TestCase):
         self.config.SectionA.NEW_VAR = 5
         self.assertEquals(5, self.config.SectionA.get_var("new_var").value)
         self.assertEquals(5, self.config.SectionA.get_var("NEW_VAR").value)
+        
+    def test_del_variable(self):
+        self.config.SectionA.NEW_VAR = 6
+        del self.config.SectionA.NEW_VAR
+        self.assertRaises(KeyError, self.config.SectionA.get_var, "new_var")
 
     def test_save_config(self):
         "It saves its current state to a .ini file"

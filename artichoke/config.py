@@ -131,6 +131,10 @@ class ConfigSection(object):
 
         self._config._parser.set(self._name, name, value_var.value)
         self._config.modified = True
+    
+    def __delattr__(self, name):
+        del self._variables[name.lower()]
+        self._config._parser.remove_option(self._name, name)
 
     def __contains__(self, name):
         return self._variables.__contains__(name.lower())
