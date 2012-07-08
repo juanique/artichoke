@@ -27,6 +27,30 @@ class ConfigUnitTestBasic(unittest.TestCase):
        config = Config()
        config.load_ini("fixtures/config1.ini")
        self.assertEqual(config.db_name, "mysql")
+    
+    def test_list_sections(self):
+        config = Config()
+        config.add_section("test2")
+        config.add_section("test1")
+        
+        expected = [
+                ('test1', config.test1),
+                ('test2', config.test2)
+            ]
+        self.assertEqual(config.list_sections(), expected)
+
+    def test_list_sections(self):
+        config = Config()
+        config.add_section("test")
+        config.test.var2 = "test2"
+        config.test.var1 = "test1"
+        
+        expected = [
+                ('var1', config.test.get_var('var1')),
+                ('var2', config.test.get_var('var2')),
+            ]
+        self.assertEqual(config.test.list_variables(), expected)
+        
 
 
 class ConfigUnitTestLoadIni(unittest.TestCase):

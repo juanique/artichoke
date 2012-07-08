@@ -47,6 +47,9 @@ class Config(object):
         except DuplicateSectionError:
             pass
 
+    def list_sections(self):
+        return sorted(self._sections.items())
+
     def save(self, output_filename):
         with open(output_filename, 'w') as f:
             self._parser.write(f)
@@ -61,7 +64,6 @@ class Config(object):
                 if section_name == "Global":
                     self._validate_global_variable(name)
                 self._sections[section_name].set_var(name, value)
-
 
     def _validate_section_name(self, name):
         if name[0] == '_':
@@ -138,6 +140,9 @@ class ConfigSection(object):
 
     def get_var(self, key):
         return self._variables[key.lower()]
+    
+    def list_variables(self):
+        return sorted(self._variables.items())
 
     def is_set(self, key):
         return key.lower() in self._variables
