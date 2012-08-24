@@ -37,9 +37,11 @@ class ConfigUnitTestBasic(unittest.TestCase):
                 ('test1', config.test1),
                 ('test2', config.test2)
             ]
+        print config.list_sections()
+        print expected
         self.assertEqual(config.list_sections(), expected)
 
-    def test_list_sections(self):
+    def test_list_vars(self):
         config = Config()
         config.add_section("test")
         config.test.var2 = "test2"
@@ -194,6 +196,17 @@ class ConfigUnitTestCreatingConfig(unittest.TestCase):
         self.config.db_name = "mysql"
         self.assertEquals(False, self.config.modified)
 
+    def test_autosave_config(self):
+        """It can be setted to automatically save changes to a given file."""
+        self.config.autosave("autosaved.ini")
+
+        print "about to set value b"
+        self.config.SectionA.set_var("value_b", 3)
+
+        saved_config = Config("autosaved.ini")
+        self.assertEquals(3, saved_config.SectionA.value_b)
+
+        os.remove("autosaved.ini")
 
 
 

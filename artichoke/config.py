@@ -38,6 +38,10 @@ class Config(object):
 
         self.modified = False
 
+    def autosave(self, filename):
+        print "setting autosave"
+        super.__setattr__(self, "_autosave", filename)
+
     def add_section(self, section_name):
         self._validate_section_name(section_name)
         if section_name not in self._sections:
@@ -48,7 +52,8 @@ class Config(object):
             pass
 
     def list_sections(self):
-        return sorted(self._sections.items())
+        sections = sorted(self._sections.items())
+        return filter( lambda x: x[0] != "Global", sections )
 
     def save(self, output_filename):
         with open(output_filename, 'w') as f:
@@ -90,6 +95,8 @@ class Config(object):
     def __setattr__(self, name, value):
         if name == "modified":
             super.__setattr__(self, name, value)
+            if self._autosave:
+                self.save(self._autosave)
         else:
             setattr(self._sections['Global'], name, value)
 
