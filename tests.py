@@ -1,5 +1,6 @@
 from ConfigParser import ConfigParser
-import unittest, os
+import unittest
+import os
 from artichoke import Config, ConfigVariable, DefaultManager
 from artichoke.errors import InvalidConfig
 
@@ -7,7 +8,7 @@ from artichoke.errors import InvalidConfig
 class ConfigUnitTestBasic(unittest.TestCase):
 
     def test_testsuite(self):
-        self.assertEqual(2, 1+1)
+        self.assertEqual(2, 1 + 1)
 
     def test_init(self):
         "It can be initialized using a config file."
@@ -22,23 +23,21 @@ class ConfigUnitTestBasic(unittest.TestCase):
         self.assertEqual(None, config._config_file)
 
     def test_load_after(self):
-       "ini files can be loaded after initialization"
+        "ini files can be loaded after initialization"
 
-       config = Config()
-       config.load_ini("fixtures/config1.ini")
-       self.assertEqual(config.db_name, "mysql")
-    
+        config = Config()
+        config.load_ini("fixtures/config1.ini")
+        self.assertEqual(config.db_name, "mysql")
+
     def test_list_sections(self):
         config = Config()
         config.add_section("test2")
         config.add_section("test1")
-        
+
         expected = [
-                ('test1', config.test1),
-                ('test2', config.test2)
-            ]
-        print config.list_sections()
-        print expected
+            ('test1', config.test1),
+            ('test2', config.test2)
+        ]
         self.assertEqual(config.list_sections(), expected)
 
     def test_list_vars(self):
@@ -46,13 +45,12 @@ class ConfigUnitTestBasic(unittest.TestCase):
         config.add_section("test")
         config.test.var2 = "test2"
         config.test.var1 = "test1"
-        
+
         expected = [
-                ('var1', config.test.get_var('var1')),
-                ('var2', config.test.get_var('var2')),
-            ]
+            ('var1', config.test.get_var('var1')),
+            ('var2', config.test.get_var('var2')),
+        ]
         self.assertEqual(config.test.list_variables(), expected)
-        
 
 
 class ConfigUnitTestLoadIni(unittest.TestCase):
@@ -70,15 +68,15 @@ class ConfigUnitTestLoadIni(unittest.TestCase):
 
         ini_value = self.config._parser.get("Global", "db_name")
         self.assertEqual("mysql", ini_value)
-    
+
     def test_get_value(self):
         "It loads the values of the config file as properties."
 
         self.assertEqual("mysql", self.config.Global.db_name)
-        
+
     def test_get_value_ci(self):
         "Values are available through case insensitive names"
-        
+
         self.assertEqual("mysql", self.config.Global.DB_NAME)
 
     def test_get_global(self):
@@ -121,6 +119,7 @@ class ConfigUnitTestCollisions(unittest.TestCase):
 
         self.assertRaises(InvalidConfig, Config, "fixtures/collision.ini")
 
+
 class ConfigUnitTestCreatingConfig(unittest.TestCase):
 
     def setUp(self):
@@ -159,7 +158,7 @@ class ConfigUnitTestCreatingConfig(unittest.TestCase):
         self.config.SectionA.NEW_VAR = 5
         self.assertEquals(5, self.config.SectionA.get_var("new_var").value)
         self.assertEquals(5, self.config.SectionA.get_var("NEW_VAR").value)
-        
+
     def test_del_variable(self):
         self.config.SectionA.NEW_VAR = 6
         del self.config.SectionA.NEW_VAR
@@ -200,14 +199,12 @@ class ConfigUnitTestCreatingConfig(unittest.TestCase):
         """It can be setted to automatically save changes to a given file."""
         self.config.autosave("autosaved.ini")
 
-        print "about to set value b"
         self.config.SectionA.set_var("value_b", 3)
 
         saved_config = Config("autosaved.ini")
         self.assertEquals(3, saved_config.SectionA.value_b)
 
         os.remove("autosaved.ini")
-
 
 
 class ConfigUnitTestMetaData(unittest.TestCase):
@@ -228,7 +225,6 @@ class ConfigUnitTestMetaData(unittest.TestCase):
         def SectionA__valueb(self):
             return "b"
 
-
     def test_set_var_description(self):
         "It allows to use custom Variable classes"
 
@@ -241,7 +237,6 @@ class ConfigUnitTestMetaData(unittest.TestCase):
 
         config = Config("fixtures/config1.ini")
         self.assertEquals(config.SectionA.doesnt_exists, None)
-
 
     def test_unset_default(self):
         "A default value provider can be used to manage unsetted variables."
@@ -280,13 +275,23 @@ class ConfigUnitTestBugs(unittest.TestCase):
         self.assertEqual(2, config.SectionA.value_a)
 
     def test_modified_set_as_global_var(self):
+        """Reproduce BUG: the `modified` attribute gets set as
+        a config var."""
+
         config = Config("fixtures/config1.ini")
         config.var = "value"
 
         self.assertFalse(config.is_set("modified"))
 
+    def test_autosave_set_as_global_var(self):
+        """Reproduce BUG: the `_autosave` attribute get set as
+        a global config va."""
+
+        config = Config("fixtures/config1.ini")
+        config.autosave("autosaved.ini")
+
+        self.assertFalse(config.is_set("_autosave"))
 
 
 if __name__ == '__main__':
     unittest.main()
-

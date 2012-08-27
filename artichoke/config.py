@@ -29,6 +29,7 @@ class Config(object):
         super.__setattr__(self, '_variable_classs', variable_class)
         super.__setattr__(self, '_default_manager', default_manager)
         super.__setattr__(self, '_sections', {})
+        super.__setattr__(self, '_autosave', False)
 
         self._default_manager.config = self
         self.add_section("Global")
@@ -39,7 +40,6 @@ class Config(object):
         self.modified = False
 
     def autosave(self, filename):
-        print "setting autosave"
         super.__setattr__(self, "_autosave", filename)
 
     def add_section(self, section_name):
@@ -138,7 +138,7 @@ class ConfigSection(object):
 
         self._config._parser.set(self._name, name, value_var.value)
         self._config.modified = True
-    
+
     def __delattr__(self, name):
         del self._variables[name.lower()]
         self._config._parser.remove_option(self._name, name)
@@ -151,7 +151,7 @@ class ConfigSection(object):
 
     def get_var(self, key):
         return self._variables[key.lower()]
-    
+
     def list_variables(self):
         return sorted(self._variables.items())
 
