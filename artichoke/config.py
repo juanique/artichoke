@@ -8,6 +8,7 @@ class ConfigVariable(object):
     def __init__(self, value=None):
         self.value = value
 
+
 class DefaultManager(object):
 
     def __init__(self, config=None):
@@ -20,10 +21,12 @@ class DefaultManager(object):
         except AttributeError:
             return None
 
+
 class Config(object):
 
-    def __init__(self, config_file=None, variable_class=ConfigVariable,
-        default_manager=DefaultManager()):
+    def __init__(
+            self, config_file=None, variable_class=ConfigVariable,
+            default_manager=DefaultManager()):
 
         super.__setattr__(self, '_parser', ConfigParser())
         super.__setattr__(self, '_variable_classs', variable_class)
@@ -53,7 +56,7 @@ class Config(object):
 
     def list_sections(self):
         sections = sorted(self._sections.items())
-        return filter( lambda x: x[0] != "Global", sections )
+        return filter(lambda x: x[0] != "Global", sections)
 
     def save(self, output_filename):
         with open(output_filename, 'w') as f:
@@ -85,7 +88,6 @@ class Config(object):
             msg = "Section %s collides with a global variable of the same name."
             raise InvalidConfig(msg)
 
-
     def __getattr__(self, name):
         try:
             return self._sections[name]
@@ -113,7 +115,8 @@ class ConfigSection(object):
         try:
             value = self._variables[name].value
         except KeyError:
-            value = self._config._default_manager.get_default(section=self._name,
+            value = self._config._default_manager.get_default(
+                section=self._name,
                 variable=name)
             self.set_var(name, value)
 
